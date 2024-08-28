@@ -15,10 +15,17 @@ from transformers import pipeline
 
 from flux.cli import SamplingOptions
 from flux.sampling import denoise, get_noise, get_schedule, prepare, unpack
-from flux.util import (configs, embed_watermark, load_ae, load_clip,
-                       load_flow_model, load_t5)
+from flux.util import (
+    configs,
+    embed_watermark,
+    load_ae,
+    load_clip,
+    load_flow_model,
+    load_t5,
+)
 
 NSFW_THRESHOLD = 0.85
+
 
 @st.cache_resource()
 def get_models(name: str, device: torch.device, offload: bool, is_schnell: bool):
@@ -26,7 +33,7 @@ def get_models(name: str, device: torch.device, offload: bool, is_schnell: bool)
     clip = load_clip(device)
     model = load_flow_model(name, device="cpu" if offload else device)
     ae = load_ae(name, device="cpu" if offload else device)
-    nsfw_classifier = pipeline("image-classification", model="Falconsai/nsfw_image_detection")
+    nsfw_classifier = pipeline("image-classification", model="Falconsai/nsfw_image_detection", device=device)
     return model, ae, t5, clip, nsfw_classifier
 
 
@@ -118,7 +125,7 @@ def main(
         os.makedirs(output_dir)
         idx = 0
     else:
-        fns = [fn for fn in iglob(output_name.format(idx="*")) if re.search(r"img_[0-9]\.jpg$", fn)]
+        fns = [fn for fn in iglob(output_name.format(idx="*")) if re.search(r"img_[0-9]+\.jpg$", fn)]
         if len(fns) > 0:
             idx = max(int(fn.split("_")[-1].split(".")[0]) for fn in fns) + 1
         else:
@@ -160,7 +167,6 @@ def main(
         t0 = time.perf_counter()
 
         if init_image is not None:
-            init_image = init_image.to(torch_device)
             if resize_img:
                 init_image = torch.nn.functional.interpolate(init_image, (opts.height, opts.width))
             else:
@@ -170,7 +176,7 @@ def main(
                 opts.width = init_image.shape[-1]
             if offload:
                 ae.encoder.to(torch_device)
-            init_image = ae.encode(init_image.to())
+            init_image = ae.encode(init_image.to(torch_device))
             if offload:
                 ae = ae.cpu()
                 torch.cuda.empty_cache()
@@ -184,10 +190,10 @@ def main(
             dtype=torch.bfloat16,
             seed=opts.seed,
         )
-        # divide pixel space by 16**2 to acocunt for latent space conversion
+        # divide pixel space by 16**2 to account for latent space conversion
         timesteps = get_schedule(
             opts.num_steps,
-            x.shape[-1] * x.shape[-2] // (16 * 16),
+            (x.shape[-1] * x.shape[-2]) // 4,
             shift=(not is_schnell),
         )
         if init_image is not None:

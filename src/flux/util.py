@@ -26,8 +26,8 @@ class ModelSpec:
 configs = {
     "flux-dev": ModelSpec(
         repo_id="black-forest-labs/FLUX.1-dev",
-        repo_flow="flux1-dev.sft",
-        repo_ae="ae.sft",
+        repo_flow="flux1-dev.safetensors",
+        repo_ae="ae.safetensors",
         ckpt_path=os.getenv("FLUX_DEV"),
         params=FluxParams(
             in_channels=64,
@@ -58,8 +58,8 @@ configs = {
     ),
     "flux-schnell": ModelSpec(
         repo_id="black-forest-labs/FLUX.1-schnell",
-        repo_flow="flux1-schnell.sft",
-        repo_ae="ae.sft",
+        repo_flow="flux1-schnell.safetensors",
+        repo_ae="ae.safetensors",
         ckpt_path=os.getenv("FLUX_SCHNELL"),
         params=FluxParams(
             in_channels=64,
@@ -194,7 +194,7 @@ class WatermarkEmbedder:
         return image
 
 
-# A fixed 48-bit message that was choosen at random
+# A fixed 48-bit message that was chosen at random
 WATERMARK_MESSAGE = 0b001010101111111010000111100111001111010100101110
 # bin(x)[2:] gives bits of x as str, use int to convert them to 0/1
 WATERMARK_BITS = [int(bit) for bit in bin(WATERMARK_MESSAGE)[2:]]

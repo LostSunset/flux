@@ -5,7 +5,7 @@ For more information, please read our [blog post](https://blackforestlabs.ai/ann
 
 # Key Features
 1. Cutting-edge output quality, second only to our state-of-the-art model `FLUX.1 [pro]`.
-2. Competitive prompt following, matching the performance of closed source alternatives .
+2. Competitive prompt following, matching the performance of closed source alternatives.
 3. Trained using guidance distillation, making `FLUX.1 [dev]` more efficient.
 4. Open weights to drive new scientific research, and empower artists to develop innovative workflows.
 5. Generated outputs can be used for personal, scientific, and commercial purposes, as described in the [flux-1-dev-non-commercial-license](./licence.md).
@@ -18,7 +18,7 @@ Developers and creatives looking to build on top of `FLUX.1 [dev]` are encourage
 The FLUX.1 models are also available via API from the following sources
 1. [bfl.ml](https://docs.bfl.ml/) (currently `FLUX.1 [pro]`)
 2. [replicate.com](https://replicate.com/collections/flux)
-3. [fal.ai](https://fal.ai/models/fal-ai/flux)
+3. [fal.ai](https://fal.ai/models/fal-ai/flux/dev)
 
 ## ComfyUI
 `FLUX.1 [dev]` is also available in [Comfy UI](https://github.com/comfyanonymous/ComfyUI) for local inference with a node-based workflow.
