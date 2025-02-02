@@ -10,16 +10,27 @@ This repo contains minimal inference code to run image generation & editing with
 ```bash
 cd $HOME && git clone https://github.com/black-forest-labs/flux
 cd $HOME/flux
-
-# Using pyvenv
 python3.10 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[all]"
 ```
 
+### Local installation with TensorRT support
+
+If you would like to install the repository with [TensorRT](https://github.com/NVIDIA/TensorRT) support, you currently need to install a PyTorch image from NVIDIA instead. First install [enroot](https://github.com/NVIDIA/enroot), next follow the steps below:
+
+```bash
+cd $HOME && git clone https://github.com/black-forest-labs/flux
+enroot import 'docker://$oauthtoken@nvcr.io#nvidia/pytorch:25.01-py3'
+enroot create -n pti2501 nvidia+pytorch+25.01-py3.sqsh
+enroot start --rw -m ${PWD}/flux:/workspace/flux -r pti2501
+cd flux
+pip install -e ".[tensorrt]" --extra-index-url https://pypi.nvidia.com
+```
+
 ### Models
 
-We are offering an extensive suite of models. For more information about the individual models, please refer to the link under **Usage**.
+We are offering an extensive suite of models. For more information about the invidual models, please refer to the link under **Usage**.
 
 | Name                        | Usage                                                      | HuggingFace repo                                               | License                                                               |
 | --------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------------- |
